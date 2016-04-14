@@ -1,12 +1,12 @@
-package com.jmd.life.gui;
+package com.jmd.gameoflife.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.jmd.life.Life;
-import com.jmd.life.LifeObserver;
-import com.jmd.life.LifeThread;
-import com.jmd.life.MainApplication;
+import com.jmd.gameoflife.MainApplication;
+import com.jmd.gameoflife.life.Life;
+import com.jmd.gameoflife.life.LifeObserver;
+import com.jmd.gameoflife.life.LifeThread;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

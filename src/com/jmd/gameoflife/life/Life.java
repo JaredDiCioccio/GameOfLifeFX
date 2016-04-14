@@ -1,4 +1,4 @@
-package com.jmd.life;
+package com.jmd.gameoflife.life;
 
 import java.util.HashSet;
 import java.util.Random;

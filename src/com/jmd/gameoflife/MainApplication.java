@@ -1,10 +1,10 @@
-package com.jmd.life;
+package com.jmd.gameoflife;
 
 import java.io.IOException;
 import java.net.URL;
 
-import com.jmd.life.gui.GameController;
-import com.jmd.life.gui.NewGameController;
+import com.jmd.gameoflife.gui.GameController;
+import com.jmd.gameoflife.gui.NewGameController;
 
 import javafx.application.Application;
 import javafx.application.Platform;

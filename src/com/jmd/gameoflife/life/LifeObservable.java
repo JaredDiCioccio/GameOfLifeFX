@@ -1,4 +1,4 @@
-package com.jmd.life;
+package com.jmd.gameoflife.life;
 
 public interface LifeObservable {
 

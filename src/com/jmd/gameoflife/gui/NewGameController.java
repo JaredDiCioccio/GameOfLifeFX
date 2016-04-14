@@ -1,10 +1,10 @@
-package com.jmd.life.gui;
+package com.jmd.gameoflife.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.jmd.life.Life;
-import com.jmd.life.MainApplication;
+import com.jmd.gameoflife.MainApplication;
+import com.jmd.gameoflife.life.Life;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

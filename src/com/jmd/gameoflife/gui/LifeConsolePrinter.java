@@ -1,7 +1,7 @@
-package com.jmd.life.gui;
+package com.jmd.gameoflife.gui;
 
-import com.jmd.life.Life;
-import com.jmd.life.LifeObserver;
+import com.jmd.gameoflife.life.Life;
+import com.jmd.gameoflife.life.LifeObserver;
 
 public class LifeConsolePrinter implements LifeObserver {
 

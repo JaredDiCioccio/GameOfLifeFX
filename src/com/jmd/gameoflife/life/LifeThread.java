@@ -1,4 +1,4 @@
-package com.jmd.life;
+package com.jmd.gameoflife.life;
 
 public class LifeThread extends Thread {
 	public static final long DEFAULT_TICK_DELAY = 100;
