@@ -172,7 +172,7 @@ public class GameController implements Initializable, LifeObserver {
 		gc.setFill(Color.BLACK);
 
 		pauseButton.selectedProperty().addListener((observable, newValue, oldValue) -> {
-			System.out.println("Toggle is now set to " + newValue);
+			
 			if (newValue) {
 				resumeGame();
 				pauseButton.setText("Pause");
@@ -211,7 +211,7 @@ public class GameController implements Initializable, LifeObserver {
 		double height = canvas.getHeight() / life.getBoard().length;
 		int row = (int) (e.getY() / height);
 		int col = (int) (e.getX() / width);
-		System.out.format("Clicked at [%f,%f] which is position [%d, %d]\n", e.getX(), e.getY(), row, col);
+//		System.out.format("Clicked at [%f,%f] which is position [%d, %d]\n", e.getX(), e.getY(), row, col);
 		if (e.getButton() == MouseButton.PRIMARY) {
 			life.setCellAlive(row, col);
 		} else if (e.getButton() == MouseButton.SECONDARY) {
