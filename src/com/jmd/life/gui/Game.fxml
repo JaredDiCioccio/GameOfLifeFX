@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jmd.life.gui.GameController">
+   <children>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <MenuBar BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExit" text="Exit">
+                           <accelerator>
+                              <KeyCodeCombination alt="DOWN" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Game">
+                  <items>
+                    <MenuItem fx:id="newGameMenuItem" mnemonicParsing="false" onAction="#handleNewGame" text="New Game">
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem fx:id="pauseGameMenuItem" mnemonicParsing="false" onAction="#handlePauseGame" text="Pause Game" />
+                        <MenuItem fx:id="resumeGameMenuItem" mnemonicParsing="false" onAction="#handleResumeGame" text="Resume Game" />
+                        <MenuItem fx:id="resetGameMenuItem" mnemonicParsing="false" onAction="#handleResetGame" text="Reset Game" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <center>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <top>
+                  <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <items>
+                        <ToggleButton fx:id="pauseButton" mnemonicParsing="false" text="Pause" />
+                        <Button fx:id="stepButton" mnemonicParsing="false" onAction="#handleStep" text="Step" />
+                        <Separator orientation="VERTICAL" />
+                        <Label text="Tick Count: " />
+                        <Label fx:id="tickLabel" text="TickCount" />
+                        <Separator orientation="VERTICAL" />
+                        <Label text="Tick Delay" />
+                        <Slider fx:id="slider" max="1000.0" min="17.0" prefHeight="28.0" prefWidth="332.0" />
+                    </items>
+                  </ToolBar>
+               </top>
+               <center>
+                  <AnchorPane BorderPane.alignment="CENTER">
+                     <children>
+                        <Canvas fx:id="canvas" height="725.0" width="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
