@@ -22,21 +22,30 @@ public class LifeThread extends Thread {
 	public void run() {
 		paused = false;
 		running = true;
-		while (running) {
+		while (isRunning()) {
 			try {
 				Thread.sleep(tickDelayInMillis);
 			} catch (InterruptedException e) {
 				System.out.println("Interrupted...");
-				if (!running) {
+				if (!isRunning()) {
 					System.out.println("Thread Exiting...");
 					break;
 				}
+				Thread.currentThread().interrupt();
 			}
 
-			if (!paused) {
+			if (!isPaused()) {
 				life.tick();
 			}
 		}
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public boolean isPaused() {
+		return paused;
 	}
 
 	public void quit() {
@@ -45,7 +54,6 @@ public class LifeThread extends Thread {
 	}
 
 	public void setPaused(boolean value) {
-		System.out.println("Setting paused to " + value);
 		this.paused = value;
 	}
 
@@ -55,7 +63,6 @@ public class LifeThread extends Thread {
 
 	public void setTickDelay(long ms) {
 		tickDelayInMillis = ms;
-		System.out.println("Set Tick Delay to " + tickDelayInMillis);
 	}
 
 	public long getTickDelayInMillis() {

@@ -66,10 +66,7 @@ public class GameController implements Initializable, LifeObserver {
 
 	public void pauseGame() {
 		if (lifeThread != null) {
-			System.out.println("Pausing Game");
 			lifeThread.setPaused(true);
-		} else {
-			System.out.println("No game to pause");
 		}
 	}
 
@@ -87,12 +84,8 @@ public class GameController implements Initializable, LifeObserver {
 
 	public void resumeGame() {
 		if (lifeThread != null) {
-			System.out.println("Resuming Game");
 			lifeThread.setPaused(false);
-		} else {
-			System.out.println("No game to resume");
 		}
-
 	}
 
 	@FXML
