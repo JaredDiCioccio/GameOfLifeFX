@@ -62,7 +62,6 @@ public class GameController implements Initializable, LifeObserver {
 	public void handleNewGame(ActionEvent event) {
 		pauseGame();
 		mainApplication.launchNewGameWindow();
-
 	}
 
 	public void pauseGame() {
@@ -119,8 +118,6 @@ public class GameController implements Initializable, LifeObserver {
 	public void startNewGame(int boardSize) {
 		life = new Life(boardSize, (int) ((boardSize * boardSize) / 2));
 		life.addObserver(this);
-		// LifeConsolePrinter p = new LifeConsolePrinter();
-		// life.addObserver(p);
 
 		if (lifeThread != null) {
 			lifeThread.quit();
@@ -160,9 +157,8 @@ public class GameController implements Initializable, LifeObserver {
 			}
 		}
 
-		Platform.runLater(() -> {
-			tickLabel.setText(Integer.toString(life.getTickCount()));
-		});
+		Platform.runLater(() -> tickLabel.setText(Integer.toString(life.getTickCount())));
+
 	}
 
 	@Override
@@ -172,7 +168,7 @@ public class GameController implements Initializable, LifeObserver {
 		gc.setFill(Color.BLACK);
 
 		pauseButton.selectedProperty().addListener((observable, newValue, oldValue) -> {
-			
+
 			if (newValue) {
 				resumeGame();
 				pauseButton.setText("Pause");
@@ -211,7 +207,6 @@ public class GameController implements Initializable, LifeObserver {
 		double height = canvas.getHeight() / life.getBoard().length;
 		int row = (int) (e.getY() / height);
 		int col = (int) (e.getX() / width);
-//		System.out.format("Clicked at [%f,%f] which is position [%d, %d]\n", e.getX(), e.getY(), row, col);
 		if (e.getButton() == MouseButton.PRIMARY) {
 			life.setCellAlive(row, col);
 		} else if (e.getButton() == MouseButton.SECONDARY) {

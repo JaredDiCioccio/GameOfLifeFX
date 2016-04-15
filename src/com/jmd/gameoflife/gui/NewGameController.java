@@ -6,8 +6,6 @@ import java.util.ResourceBundle;
 import com.jmd.gameoflife.MainApplication;
 import com.jmd.gameoflife.life.Life;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -48,7 +46,8 @@ public class NewGameController implements Initializable {
 		} else if (selectedToggle == radioButtonCustom) {
 			mainApplication.startNewGame(Integer.parseInt(textFieldCustom.getText()));
 		} else {
-			// TODO something went wrong
+			// Something went wrong. Just abort.
+			mainApplication.cancelNewGameWindow();
 		}
 		mainApplication.closeNewGameWindow();
 	}
@@ -61,26 +60,19 @@ public class NewGameController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		radioButtonCustom.selectedProperty().addListener(new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				textFieldCustom.setDisable(!newValue);
+		radioButtonCustom.selectedProperty()
+				.addListener((observable, oldValue, newValue) -> textFieldCustom.setDisable(!newValue));
+
+		textFieldCustom.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.matches("\\d*")) {
+				int value = Integer.parseInt(newValue);
+				value = value <= 100 ? value : 100;
+				textFieldCustom.setText(Integer.toString(value));
+			} else {
+				textFieldCustom.setText(oldValue);
 			}
 		});
 
-		textFieldCustom.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (newValue.matches("\\d*")) {
-					int value = Integer.parseInt(newValue);
-					value = value <= 100 ? value : 100;
-					textFieldCustom.setText(Integer.toString(value));
-				} else {
-					textFieldCustom.setText(oldValue);
-				}
-			}
-		});
-		
 		radioButtonSmall.selectedProperty().set(true);
 	}
 
