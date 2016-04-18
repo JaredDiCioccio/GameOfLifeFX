@@ -2,6 +2,8 @@ package com.jmd.gameoflife;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.jmd.gameoflife.gui.GameController;
 import com.jmd.gameoflife.gui.NewGameController;
@@ -14,9 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 public class MainApplication extends Application {
+	private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
 	private static final String NEW_GAME_VIEW_FXML = "gui/NewGame.fxml";
 	private static final String GAME_VIEW_FXML = "gui/Game.fxml";
@@ -32,7 +34,7 @@ public class MainApplication extends Application {
 		Scene scene = new Scene(root, 800, 800, Color.WHITE);
 		primaryStage.setTitle("Life");
 		primaryStage.setScene(scene);
-		primaryStage.setOnCloseRequest(e -> handleExit(e));
+		primaryStage.setOnCloseRequest(e -> handleExit());
 		primaryStage.setResizable(false);
 		this.gameStage = primaryStage;
 
@@ -46,8 +48,8 @@ public class MainApplication extends Application {
 		AnchorPane pane = null;
 		try {
 			pane = fxmlLoader.load();
-		} catch (IOException e) {			
-			e.printStackTrace();
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, "Could not load fxmlFile: " + fxmlLoader.getLocation(), e);
 		}
 		gameController = fxmlLoader.getController();
 		gameController.setMainApplication(this);
@@ -60,8 +62,8 @@ public class MainApplication extends Application {
 
 	}
 
-	public void handleExit(WindowEvent e) {
-		System.out.println("Exiting..................");
+	public void handleExit() {
+		logger.log(Level.INFO, "Exiting Application");
 		this.gameController.quit();
 		this.gameStage.close();
 		Platform.exit();
@@ -84,8 +86,7 @@ public class MainApplication extends Application {
 		try {
 			pane = loader.load();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Could not load fxmlFile: " + loader.getLocation(), e);
 		}
 
 		newGameController = loader.getController();
@@ -104,7 +105,7 @@ public class MainApplication extends Application {
 	}
 
 	public void startNewGame(int boardSize) {
-		System.out.println("Starting New Game");
+		logger.log(Level.INFO, "Starting New Game with boardSize " + boardSize);
 		gameController.startNewGame(boardSize);
 
 	}

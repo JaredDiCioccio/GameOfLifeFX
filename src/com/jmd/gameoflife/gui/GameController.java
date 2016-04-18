@@ -2,6 +2,7 @@ package com.jmd.gameoflife.gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import com.jmd.gameoflife.MainApplication;
 import com.jmd.gameoflife.life.Life;
@@ -9,7 +10,6 @@ import com.jmd.gameoflife.life.LifeObserver;
 import com.jmd.gameoflife.life.LifeThread;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -51,15 +51,13 @@ public class GameController implements Initializable, LifeObserver {
 	private MainApplication mainApplication;
 	private LifeConsolePrinter lifeConsolePrinter;
 
-	// Event Listener on MenuItem[#exitMenuItem].onAction
 	@FXML
-	public void handleExit(ActionEvent event) {
-		mainApplication.handleExit(null);
+	public void handleExit() {
+		mainApplication.handleExit();
 	}
 
-	// Event Listener on MenuItem[#newGameMenuItem].onAction
 	@FXML
-	public void handleNewGame(ActionEvent event) {
+	public void handleNewGame() {
 		pauseGame();
 		mainApplication.launchNewGameWindow();
 	}
@@ -71,14 +69,15 @@ public class GameController implements Initializable, LifeObserver {
 	}
 
 	@FXML
-	public void handlePauseGame(ActionEvent event) {
+	public void handlePauseGame() {
 		pauseButton.selectedProperty().set(true);
 		pauseGame();
+
 	}
 
 	// Event Listener on MenuItem[#resumeGameMenuItem].onAction
 	@FXML
-	public void handleResumeGame(ActionEvent event) {
+	public void handleResumeGame() {
 		resumeGame();
 	}
 
@@ -89,7 +88,7 @@ public class GameController implements Initializable, LifeObserver {
 	}
 
 	@FXML
-	public void handleResetGame(ActionEvent event) {
+	public void handleResetGame() {
 		lifeThread.setPaused(true);
 		life = new Life(life.getBoard().length);
 		life.addObserver(this);
@@ -99,12 +98,12 @@ public class GameController implements Initializable, LifeObserver {
 	}
 
 	@FXML
-	public void handlePause(ActionEvent event) {
+	public void handlePause() {
 		lifeThread.setPaused(true);
 	}
 
 	@FXML
-	public void handleStep(ActionEvent event) {
+	public void handleStep() {
 		life.tick();
 	}
 

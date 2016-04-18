@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import com.jmd.gameoflife.MainApplication;
 import com.jmd.gameoflife.life.Life;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -35,7 +34,7 @@ public class NewGameController implements Initializable {
 	private MainApplication mainApplication;
 
 	@FXML
-	public void handleStartButton(ActionEvent event) {
+	public void handleStartButton() {
 		Toggle selectedToggle = radioGroup.getSelectedToggle();
 		if (selectedToggle == radioButtonSmall) {
 			mainApplication.startNewGame(Life.SMALL_SIZE);
@@ -53,7 +52,7 @@ public class NewGameController implements Initializable {
 	}
 
 	@FXML
-	public void handleCancelButton(ActionEvent event) {
+	public void handleCancelButton() {
 		mainApplication.cancelNewGameWindow();
 
 	}

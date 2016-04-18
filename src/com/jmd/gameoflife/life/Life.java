@@ -3,8 +3,11 @@ package com.jmd.gameoflife.life;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Life implements LifeObservable {
+	private static final Logger logger = Logger.getLogger(Life.class.getName());
 
 	/**
 	 * OFFSETS format is {row offset, column offset}
@@ -28,30 +31,30 @@ public class Life implements LifeObservable {
 
 	private Set<LifeObserver> observers;
 
-	public Life(int boardWidthHeight, int randomLivingCells, GameType gameType) {
-		this.board = new int[boardWidthHeight][boardWidthHeight];
-		this.tickCount = 0;
-		for (int i = 0; i < randomLivingCells; i++) {
-			int row = randInt(0, boardWidthHeight - 1);
-			int col = randInt(0, boardWidthHeight - 1);
-			
-			board[row][col] = 1;
-		}
-		this.gameType = gameType;
-		this.observers = new HashSet<LifeObserver>();
-		notifyObservers();		
-	}
-
-	private void notifyObservers() {
-		observers.forEach(o -> o.notifyObserver(this));
+	public Life(int boardWidthHeight) {
+		this(boardWidthHeight, 0);
 	}
 
 	public Life(int boardWidthHeight, int randomLivingCells) {
 		this(boardWidthHeight, randomLivingCells, GameType.OVERLAPS);
 	}
 
-	public Life(int boardWidthHeight) {
-		this(boardWidthHeight, 0);
+	public Life(int boardWidthHeight, int randomLivingCells, GameType gameType) {
+		this.board = new int[boardWidthHeight][boardWidthHeight];
+		this.tickCount = 0;
+		for (int i = 0; i < randomLivingCells; i++) {
+			int row = randInt(0, boardWidthHeight - 1);
+			int col = randInt(0, boardWidthHeight - 1);
+
+			board[row][col] = 1;
+		}
+		this.gameType = gameType;
+		this.observers = new HashSet<>();
+		notifyObservers();
+	}
+
+	private void notifyObservers() {
+		observers.forEach(o -> o.notifyObserver(this));
 	}
 
 	public int getTickCount() {
@@ -120,18 +123,31 @@ public class Life implements LifeObservable {
 	}
 
 	private boolean tileIsAliveAt(int row, int col) {
-
 		if (gameType == GameType.OVERLAPS) {
-			row = row < 0 ? board.length - 1 : row;
-			col = col < 0 ? board.length - 1 : col;
-			row = row >= board.length ? 0 : row;
-			col = col >= board.length ? 0 : col;
-
-			return board[row][col] == 1;
+			int finalRow = getValidatedRowOrCol(row);
+			int finalCol = getValidatedRowOrCol(col);
+			return board[finalRow][finalCol] == 1;
 		} else {
-			return (row >= 0 && row < board.length && col >= 0 && col < board.length) ? board[row][col] == 1 : false;
+			if (cellIsInBounds(row, col)) {
+				return board[row][col] == 1;
+			} else {
+				return false;
+			}
 		}
+	}
 
+	private int getValidatedRowOrCol(int position) {
+		if (position < 0) {
+			return board.length - 1;
+		} else if (position > board.length) {
+			return 0;
+		} else {
+			return position;
+		}
+	}
+
+	private boolean cellIsInBounds(int row, int col) {
+		return row >= 0 && row < board.length && col >= 0 && col < board.length;
 	}
 
 	public int[][] getBoard() {
@@ -156,9 +172,7 @@ public class Life implements LifeObservable {
 		Random rand = new Random();
 		// nextInt is normally exclusive of the top value,
 		// so add 1 to make it inclusive
-		int randomNum = rand.nextInt((max - min) + 1) + min;
-
-		return randomNum;
+		return rand.nextInt((max - min) + 1) + min;
 	}
 
 	@Override
@@ -172,19 +186,22 @@ public class Life implements LifeObservable {
 		observers.remove(observer);
 	}
 
-	public void toggleCellAt(int row, int col) {
-		int oldValue = board[row][col];
-		board[row][col] = oldValue == 1 ? 0 : 1;
-		notifyObservers();
-	}
-
 	public void setCellAlive(int row, int col) {
-		board[row][col] = 1;
+		try {
+			board[row][col] = 0;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			logger.log(Level.FINE, "Tried to give birth in an out of bounds cell", e);
+		}
+
 		notifyObservers();
 	}
 
 	public void setCellDead(int row, int col) {
-		board[row][col] = 0;
+		try {
+			board[row][col] = 0;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			logger.log(Level.FINE, "Tried to kill an out of bounds cell", e);
+		}
 		notifyObservers();
 	}
 
