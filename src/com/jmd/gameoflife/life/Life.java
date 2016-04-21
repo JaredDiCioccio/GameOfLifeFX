@@ -46,7 +46,7 @@ public class Life implements LifeObservable {
 			int row = randInt(0, boardWidthHeight - 1);
 			int col = randInt(0, boardWidthHeight - 1);
 
-			board[row][col] = 1;
+			setValueOfCell(row, col, 1);
 		}
 		this.gameType = gameType;
 		this.observers = new HashSet<>();
@@ -126,20 +126,28 @@ public class Life implements LifeObservable {
 		if (gameType == GameType.OVERLAPS) {
 			int finalRow = getValidatedRowOrCol(row);
 			int finalCol = getValidatedRowOrCol(col);
-			return board[finalRow][finalCol] == 1;
+			return getValueOfCell(finalRow, finalCol) == 1;
 		} else {
 			if (cellIsInBounds(row, col)) {
-				return board[row][col] == 1;
+				return getValueOfCell(row, col) == 1;
 			} else {
 				return false;
 			}
 		}
 	}
 
+	private int getValueOfCell(int row, int col) {
+		return board[row][col];
+	}
+
+	private void setValueOfCell(int row, int col, int value) {
+		board[row][col] = value;
+	}
+
 	private int getValidatedRowOrCol(int position) {
 		if (position < 0) {
 			return board.length - 1;
-		} else if (position > board.length) {
+		} else if (position >= board.length) {
 			return 0;
 		} else {
 			return position;
@@ -188,7 +196,7 @@ public class Life implements LifeObservable {
 
 	public void setCellAlive(int row, int col) {
 		try {
-			board[row][col] = 0;
+			setValueOfCell(row, col, 1);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			logger.log(Level.FINE, "Tried to give birth in an out of bounds cell", e);
 		}
@@ -198,7 +206,7 @@ public class Life implements LifeObservable {
 
 	public void setCellDead(int row, int col) {
 		try {
-			board[row][col] = 0;
+			setValueOfCell(row, col, 0);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			logger.log(Level.FINE, "Tried to kill an out of bounds cell", e);
 		}
