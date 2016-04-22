@@ -12,6 +12,7 @@ public class LifeThread extends Thread {
 	public LifeThread(Life life, long tickDelayInMillis) {
 		this.life = life;
 		this.tickDelayInMillis = tickDelayInMillis;
+		setDaemon(true); 
 	}
 
 	public LifeThread(Life life) {

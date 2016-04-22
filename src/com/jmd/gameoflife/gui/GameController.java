@@ -75,7 +75,7 @@ public class GameController implements Initializable, LifeObserver {
 
 	}
 
-	// Event Listener on MenuItem[#resumeGameMenuItem].onAction
+	
 	@FXML
 	public void handleResumeGame() {
 		resumeGame();
