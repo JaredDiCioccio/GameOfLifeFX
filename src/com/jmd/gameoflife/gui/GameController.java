@@ -24,199 +24,203 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class GameController implements Initializable, LifeObserver {
-	@FXML
-	private MenuItem exitMenuItem;
-	@FXML
-	private MenuItem newGameMenuItem;
-	@FXML
-	private MenuItem pauseGameMenuItem;
-	@FXML
-	private MenuItem resumeGameMenuItem;
-	@FXML
-	private MenuItem resetGameMenuItem;
-	@FXML
-	private ToggleButton pauseButton;
-	@FXML
-	private Button stepButton;
-	@FXML
-	private Label tickLabel;
-	@FXML
-	private Canvas canvas;
-	@FXML
-	private Slider slider;
+    @FXML
+    private MenuItem exitMenuItem;
+    @FXML
+    private MenuItem newGameMenuItem;
+    @FXML
+    private MenuItem pauseGameMenuItem;
+    @FXML
+    private MenuItem resumeGameMenuItem;
+    @FXML
+    private MenuItem resetGameMenuItem;
+    @FXML
+    private ToggleButton pauseButton;
+    @FXML
+    private Button stepButton;
+    @FXML
+    private Label tickLabel;
+    @FXML
+    private Canvas canvas;
+    @FXML
+    private Slider slider;
 
-	private GraphicsContext gc;
-	private Life life;
-	private LifeThread lifeThread;
-	private MainApplication mainApplication;
-	private LifeConsolePrinter lifeConsolePrinter;
+    private GraphicsContext gc;
+    private Life life;
+    private LifeThread lifeThread;
+    private MainApplication mainApplication;
+    private LifeConsolePrinter lifeConsolePrinter;
 
-	@FXML
-	public void handleExit() {
-		mainApplication.handleExit();
-	}
+    public GameController(MainApplication mainApplication) {
+        this.mainApplication = mainApplication;
+    }
 
-	@FXML
-	public void handleNewGame() {
-		pauseGame();
-		mainApplication.launchNewGameWindow();
-	}
+    @FXML
+    public void handleExit() {
+        mainApplication.handleExit();
+    }
 
-	public void pauseGame() {
-		if (lifeThread != null) {
-			lifeThread.setPaused(true);
-		}
-	}
+    @FXML
+    public void handleNewGame() {
+        pauseGame();
+        mainApplication.launchNewGameWindow();
+    }
 
-	@FXML
-	public void handlePauseGame() {
-		pauseButton.selectedProperty().set(true);
-		pauseGame();
+    public void pauseGame() {
+        if (lifeThread != null) {
+            lifeThread.setPaused(true);
+        }
+    }
 
-	}
+    @FXML
+    public void handlePauseGame() {
+        pauseButton.selectedProperty().set(true);
+        pauseGame();
 
-	
-	@FXML
-	public void handleResumeGame() {
-		resumeGame();
-	}
+    }
 
-	public void resumeGame() {
-		if (lifeThread != null) {
-			lifeThread.setPaused(false);
-		}
-	}
 
-	@FXML
-	public void handleResetGame() {
-		lifeThread.setPaused(true);
-		life = new Life(life.getBoard().length);
-		life.addObserver(this);
-		lifeThread = null;
-		lifeThread = new LifeThread(life);
-		lifeThread.start();
-	}
+    @FXML
+    public void handleResumeGame() {
+        resumeGame();
+    }
 
-	@FXML
-	public void handlePause() {
-		lifeThread.setPaused(true);
-	}
+    public void resumeGame() {
+        if (lifeThread != null) {
+            lifeThread.setPaused(false);
+        }
+    }
 
-	@FXML
-	public void handleStep() {
-		life.tick();
-	}
+    @FXML
+    public void handleResetGame() {
+        lifeThread.setPaused(true);
+        life = new Life(life.getBoard().length);
+        life.addObserver(this);
+        lifeThread = null;
+        lifeThread = new LifeThread(life);
+        lifeThread.start();
+    }
 
-	public void startNewGame(int boardSize) {
-		life = new Life(boardSize, (int) ((boardSize * boardSize) / 2));
-		life.addObserver(this);
+    @FXML
+    public void handlePause() {
+        lifeThread.setPaused(true);
+    }
 
-		if (lifeThread != null) {
-			lifeThread.quit();
-		}
+    @FXML
+    public void handleStep() {
+        life.tick();
+    }
 
-		lifeThread = new LifeThread(life);
-		lifeThread.start();
-		slider.setValue(lifeThread.getTickDelayInMillis());
-	}
+    public void startNewGame(int boardSize) {
+        life = new Life(boardSize, (int) ((boardSize * boardSize) / 2));
+        life.addObserver(this);
 
-	public void setMainApplication(MainApplication mainApplication) {
-		this.mainApplication = mainApplication;
+        if (lifeThread != null) {
+            lifeThread.quit();
+        }
 
-	}
+        lifeThread = new LifeThread(life);
+        lifeThread.start();
+        slider.setValue(lifeThread.getTickDelayInMillis());
+    }
 
-	@Override
-	public void notifyObserver(Life life) {
-		redraw(life);
-	}
+    public void setMainApplication(MainApplication mainApplication) {
+        this.mainApplication = mainApplication;
 
-	private void redraw(Life life) {
+    }
 
-		int[][] board = life.getBoard();
-		gc = canvas.getGraphicsContext2D();
+    @Override
+    public void notifyObserver(Life life) {
+        redraw(life);
+    }
 
-		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for (int row = 0; row < board.length; row++) {
-			for (int col = 0; col < board.length; col++) {
+    private void redraw(Life life) {
 
-				double w = canvas.getWidth() / life.getBoard().length;
-				double h = canvas.getHeight() / life.getBoard().length;
-				double x = w * col;
-				double y = h * row;
-				if (board[row][col] == 1) {
-					gc.fillRect(x, y, w, h);
-				}
-			}
-		}
+        int[][] board = life.getBoard();
+        gc = canvas.getGraphicsContext2D();
 
-		Platform.runLater(() -> tickLabel.setText(Integer.toString(life.getTickCount())));
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board.length; col++) {
 
-	}
+                double w = canvas.getWidth() / life.getBoard().length;
+                double h = canvas.getHeight() / life.getBoard().length;
+                double x = w * col;
+                double y = h * row;
+                if (board[row][col] == 1) {
+                    gc.fillRect(x, y, w, h);
+                }
+            }
+        }
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+        Platform.runLater(() -> tickLabel.setText(Integer.toString(life.getTickCount())));
 
-		gc = canvas.getGraphicsContext2D();
-		gc.setFill(Color.BLACK);
+    }
 
-		pauseButton.selectedProperty().addListener((observable, newValue, oldValue) -> {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
-			if (newValue) {
-				resumeGame();
-				pauseButton.setText("Pause");
+        gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.BLACK);
 
-			} else {
-				pauseGame();
-				pauseButton.setText("Resume");
-			}
-		});
+        pauseButton.selectedProperty().addListener((observable, newValue, oldValue) -> {
 
-		canvas.setOnMouseClicked(e -> {
-			if (life != null && canvas != null) {
-				handleMouseEvent(e);
-			}
+            if (newValue) {
+                resumeGame();
+                pauseButton.setText("Pause");
 
-		});
-		canvas.setOnMouseDragged(e -> {
+            } else {
+                pauseGame();
+                pauseButton.setText("Resume");
+            }
+        });
 
-			if (life != null && canvas != null) {
-				handleMouseEvent(e);
-			}
+        canvas.setOnMouseClicked(e -> {
+            if (life != null && canvas != null) {
+                handleMouseEvent(e);
+            }
 
-		});
+        });
+        canvas.setOnMouseDragged(e -> {
 
-		slider.valueProperty().addListener((o, nv, ov) -> {
-			if (lifeThread != null) {
-				lifeThread.setTickDelay(nv.longValue());
-			}
-		});
-		slider.setValue(LifeThread.DEFAULT_TICK_DELAY);
+            if (life != null && canvas != null) {
+                handleMouseEvent(e);
+            }
 
-	}
+        });
 
-	private void handleMouseEvent(MouseEvent e) {
-		double width = canvas.getWidth() / life.getBoard().length;
-		double height = canvas.getHeight() / life.getBoard().length;
-		int row = (int) (e.getY() / height);
-		int col = (int) (e.getX() / width);
-		if (e.getButton() == MouseButton.PRIMARY) {
-			life.setCellAlive(row, col);
-		} else if (e.getButton() == MouseButton.SECONDARY) {
-			life.setCellDead(row, col);
-		}
-	}
+        slider.valueProperty().addListener((o, nv, ov) -> {
+            if (lifeThread != null) {
+                lifeThread.setTickDelay(nv.longValue());
+            }
+        });
+        slider.setValue(LifeThread.DEFAULT_TICK_DELAY);
 
-	public void quit() {
+    }
 
-		if (lifeThread != null) {
-			lifeThread.quit();
-		}
-		lifeThread = null;
-		if (life != null) {
-			life = null;
-		}
-		if (lifeConsolePrinter != null) {
-			lifeConsolePrinter = null;
-		}
-	}
+    private void handleMouseEvent(MouseEvent e) {
+        double width = canvas.getWidth() / life.getBoard().length;
+        double height = canvas.getHeight() / life.getBoard().length;
+        int row = (int) (e.getY() / height);
+        int col = (int) (e.getX() / width);
+        if (e.getButton() == MouseButton.PRIMARY) {
+            life.setCellAlive(row, col);
+        } else if (e.getButton() == MouseButton.SECONDARY) {
+            life.setCellDead(row, col);
+        }
+    }
+
+    public void quit() {
+
+        if (lifeThread != null) {
+            lifeThread.quit();
+        }
+        lifeThread = null;
+        if (life != null) {
+            life = null;
+        }
+        if (lifeConsolePrinter != null) {
+            lifeConsolePrinter = null;
+        }
+    }
 }

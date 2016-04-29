@@ -16,106 +16,112 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class MainApplication extends Application {
-	private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
+    private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
-	private static final String NEW_GAME_VIEW_FXML = "gui/NewGame.fxml";
-	private static final String GAME_VIEW_FXML = "gui/Game.fxml";
+    private static final String NEW_GAME_VIEW_FXML = "gui/NewGame.fxml";
+    private static final String GAME_VIEW_FXML = "gui/Game.fxml";
 
-	private Stage gameStage;
-	private Stage newGameStage;
-	private NewGameController newGameController;
-	private GameController gameController;
+    private Stage gameStage;
+    private Stage newGameStage;
+    private NewGameController newGameController;
+    private GameController gameController;
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		Group root = new Group();
-		Scene scene = new Scene(root, 800, 800, Color.WHITE);
-		primaryStage.setTitle("Life");
-		primaryStage.setScene(scene);
-		primaryStage.setOnCloseRequest(e -> handleExit());
-		primaryStage.setResizable(false);
-		this.gameStage = primaryStage;
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Group root = new Group();
+        Scene scene = new Scene(root, 800, 800, Color.WHITE);
+        primaryStage.setTitle("Life");
+        primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(e -> handleExit());
+        primaryStage.setResizable(false);
+        this.gameStage = primaryStage;
 
-		launchGameWindow();
+        launchGameWindow();
 
-	}
+    }
 
-	private GameController launchGameWindow() {
-		FXMLLoader fxmlLoader = getFxmlLoader(GAME_VIEW_FXML);
+    private GameController launchGameWindow() {
+        FXMLLoader fxmlLoader = getFxmlLoader(GAME_VIEW_FXML);
+        fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+            @Override
+            public Object call(Class<?> e) {
+                return new GameController(MainApplication.this);
+            }
+        });
 
-		AnchorPane pane = null;
-		try {
-			pane = fxmlLoader.load();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, "Could not load fxmlFile: " + fxmlLoader.getLocation(), e);
-		}
-		gameController = fxmlLoader.getController();
-		gameController.setMainApplication(this);
-		Scene scene = new Scene(pane);
-		gameStage.setScene(scene);
+        AnchorPane pane = null;
+        try {
+            pane = fxmlLoader.load();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Could not load fxmlFile: " + fxmlLoader.getLocation(), e);
+        }
+        gameController = fxmlLoader.getController();
+        Scene scene = new Scene(pane);
+        gameStage.setScene(scene);
 
-		gameStage.sizeToScene();
-		gameStage.show();
-		return gameController;
+        gameStage.sizeToScene();
+        gameStage.show();
+        return gameController;
 
-	}
+    }
 
-	public void handleExit() {
-		logger.log(Level.INFO, "Exiting Application");
-		this.gameController.quit();
-		this.gameStage.close();
-		Platform.exit();
+    public void handleExit() {
+        logger.log(Level.INFO, "Exiting Application");
+        this.gameController.quit();
+        this.gameStage.close();
+        Platform.exit();
 
-	}
+    }
 
-	public FXMLLoader getFxmlLoader(String fxmlLocation) {
-		FXMLLoader loader = new FXMLLoader();
-		URL location = MainApplication.class.getResource(fxmlLocation);
-		loader.setLocation(location);
-		return loader;
-	}
+    public FXMLLoader getFxmlLoader(String fxmlLocation) {
+        FXMLLoader loader = new FXMLLoader();
+        URL location = MainApplication.class.getResource(fxmlLocation);
+        loader.setLocation(location);
+        return loader;
+    }
 
-	public NewGameController launchNewGameWindow() {
-		gameController.pauseGame();
+    public NewGameController launchNewGameWindow() {
+        gameController.pauseGame();
 
-		FXMLLoader loader = getFxmlLoader(NEW_GAME_VIEW_FXML);
+        FXMLLoader loader = getFxmlLoader(NEW_GAME_VIEW_FXML);
 
-		AnchorPane pane = null;
-		try {
-			pane = loader.load();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, "Could not load fxmlFile: " + loader.getLocation(), e);
-		}
+        AnchorPane pane = null;
+        try {
+            pane = loader.load();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Could not load fxmlFile: " + loader.getLocation(), e);
+        }
 
-		newGameController = loader.getController();
-		newGameController.setMainApplication(this);
-		newGameStage = new Stage();
-		Scene scene = new Scene(pane);
-		newGameStage.setScene(scene);
-		newGameStage.sizeToScene();
-		newGameStage.show();
-		return newGameController;
-	}
+        newGameController = loader.getController();
+        newGameController.setMainApplication(this);
+        newGameStage = new Stage();
+        Scene scene = new Scene(pane);
+        newGameStage.setScene(scene);
+        newGameStage.sizeToScene();
+        newGameStage.show();
+        return newGameController;
+    }
 
-	public void cancelNewGameWindow() {
-		closeNewGameWindow();
-		gameController.resumeGame();
-	}
+    public void cancelNewGameWindow() {
+        closeNewGameWindow();
+        gameController.resumeGame();
+    }
 
-	public void startNewGame(int boardSize) {
-		logger.log(Level.INFO, "Starting New Game with boardSize " + boardSize);
-		gameController.startNewGame(boardSize);
+    public void startNewGame(int boardSize) {
+        logger.log(Level.INFO, "Starting New Game with boardSize " + boardSize);
+        gameController.startNewGame(boardSize);
 
-	}
+    }
 
-	public static void main(String[] args) {
-		MainApplication.launch(args);
-	}
+    public static void main(String[] args) {
+        MainApplication.launch(args);
+    }
 
-	public void closeNewGameWindow() {
-		this.newGameStage.close();
+    public void closeNewGameWindow() {
+        this.newGameStage.close();
 
-	}
+    }
 }
